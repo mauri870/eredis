@@ -1,6 +1,6 @@
 
-REDIS_SHA = 00613bed06af890b9f09befc71de3f2aedabbacb
-REDIS_URL = https://codeload.github.com/antirez/redis/tar.gz/$(REDIS_SHA)
+REDIS_VERSION = 4.0.14
+REDIS_URL = https://github.com/redis/redis/archive/refs/tags/$(REDIS_VERSION).tar.gz
 ifeq ($(shell uname -s), Darwin)
 DYLIB_SETUP=DYLD_LIBRARY_PATH=`pwd`/redis/src
 else
@@ -25,7 +25,7 @@ redis/src/liberedis.so: redis/.patched
 redis/.patched:
 	mkdir -p redis && \
 	cd redis && \
-	curl --silent $(REDIS_URL) | gunzip -c | tar xf - --strip 1 && \
+	wget -qO- $(REDIS_URL) | tar -xz --strip-components=1 && \
 	patch -p1 < ../eredis.diff && \
 	sed -i 's/const char \*SDS_NOINIT;/extern const char *SDS_NOINIT;/' src/sds.h && \
 	touch .patched
