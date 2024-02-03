@@ -9,7 +9,7 @@ EXTRA_LDFLAGS = -Wl,-rpath `pwd`/redis/src
 endif
 
 CC ?= gcc
-CFLAGS = -O2 -g
+CFLAGS = -O2 -g -std=gnu99
 
 all: eredis_test eredis_benchmark
 

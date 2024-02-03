@@ -33,6 +33,19 @@ func TestEmbeddedRedis(t *testing.T) {
 		t.Fatal("Unexpected chunk")
 	}
 
+	// Basic SET
+	t.Log("Doing basic SET command")
+	c.PrepareCmd(`SET mykey myval`)
+	err = c.Execute()
+	assertEqual(t, err, nil)
+
+	reply = c.ReadReplyChunk()
+	assertEqual(t, *reply, "+OK\r\n")
+	reply = c.ReadReplyChunk()
+	if reply != nil {
+		t.Fatal("Unexpected chunk")
+	}
+
 	// SET/GET with binary (null) data
 	t.Log("Doing SET/GET with non-null-safe binary data")
 	c.PrepareRequest([]string{"SET", "mykey", "\000\000\000"})

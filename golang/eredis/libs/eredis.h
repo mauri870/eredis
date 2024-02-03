@@ -15,7 +15,7 @@ void eredis_free_client(eredis_client_t *c);
  * size_t array.
  */
 int eredis_prepare_request(eredis_client_t *c, int args_count, const char **args, size_t *arg_lens);
-
+int eredis_prepare_cmd(eredis_client_t *c, const char *cmd);
 /* Execute request; returns 0 on success. */
 int eredis_execute(eredis_client_t *c);
 

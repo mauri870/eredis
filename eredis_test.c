@@ -37,6 +37,37 @@ void test_set_command(void)
     TEST_CHECK(!memcmp(reply, "+OK\r\n", 5));
 }
 
+void test_str_command(void)
+{
+    BEGIN_TEST();
+
+    int len;
+    const char *cmd = "SET mykey myvalue";
+
+    TEST_CHECK(eredis_prepare_cmd(c, cmd) == 0);
+    TEST_CHECK(eredis_execute(c) == 0);
+
+    const char *reply = eredis_read_reply_chunk(c, &len);
+    TEST_CHECK(len == 5);
+    TEST_CHECK(!memcmp(reply, "+OK\r\n", 5));
+}
+
+void test_info_command(void)
+{
+    BEGIN_TEST();
+
+    int len;
+    const char *cmd = "INFO";
+
+    TEST_CHECK(eredis_prepare_cmd(c, cmd) == 0);
+    TEST_CHECK(eredis_execute(c) == 0);
+
+    const char *reply = eredis_read_reply_chunk(c, &len);
+    TEST_CHECK(len > 0);
+    TEST_MSG("reply: %s", reply);
+    TEST_CHECK(strstr(reply, "redis_version:4.0.14") != NULL);
+}
+
 void test_binary_args(void)
 {
     BEGIN_TEST();
@@ -110,6 +141,8 @@ void test_lua_reply(void)
 
 TEST_LIST = {
     { "test-set-command", test_set_command },
+    { "test-str-command", test_str_command },
+    { "test-info-command", test_info_command },
     { "test-binary-args", test_binary_args },
     { "test-long-reply", test_long_reply },
     { "test-lua-reply", test_lua_reply },

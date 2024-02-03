@@ -32,6 +32,7 @@ import "C"
 
 import (
 	"errors"
+	"unsafe"
 )
 
 type Client struct {
@@ -71,6 +72,13 @@ func (c *Client) PrepareRequest(args []string) {
 	}
 
 	C.eredis_prepare_request(c.client, C.int(len(args)), cargs, lengths)
+}
+
+func (c *Client) PrepareCmd(cmd string) {
+	cstr := C.CString(cmd)
+	defer C.free(unsafe.Pointer(cstr))
+
+	C.eredis_prepare_cmd(c.client, cstr)
 }
 
 func (c *Client) Execute() error {
