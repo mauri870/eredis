@@ -27,13 +27,14 @@ redis/.patched:
 	cd redis && \
 	curl --silent $(REDIS_URL) | gunzip -c | tar xf - --strip 1 && \
 	patch -p1 < ../eredis.diff && \
+	sed -i 's/const char \*SDS_NOINIT;/extern const char *SDS_NOINIT;/' src/sds.h && \
 	touch .patched
 
 eredis_test: redis/src/liberedis.so eredis_test.o
 	$(CC) eredis_test.o -o eredis_test -Lredis/src -leredis $(EXTRA_LDFLAGS) $(EXTRA_LIBS)
 
 eredis_benchmark: redis/src/liberedis.so eredis_benchmark.o
-	$(CC) eredis_benchmark.o -o eredis_benchmark -Lredis/src -leredis $(EXTRA_LDFLAGS) $(EXTRA_LIBS)
+	$(CC) eredis_benchmark.o -o eredis_benchmark -fPIE -Lredis/src -leredis $(EXTRA_LDFLAGS) $(EXTRA_LIBS)
 
 tests: eredis_test
 	$(DYLIB_SETUP) ./eredis_test
