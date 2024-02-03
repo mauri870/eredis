@@ -8,7 +8,7 @@ DYLIB_SETUP=LD_LIBRARY_PATH=`pwd`/redis/src
 EXTRA_LDFLAGS = -Wl,-rpath `pwd`/redis/src
 endif
 
-CC = gcc
+CC ?= gcc
 CFLAGS = -O2 -g
 
 all: eredis_test eredis_benchmark
