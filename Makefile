@@ -30,7 +30,13 @@ redis/.patched:
 	sed -i 's/const char \*SDS_NOINIT;/extern const char *SDS_NOINIT;/' src/sds.h && \
 	touch .patched
 
-eredis_test: redis/src/liberedis.so eredis_test.o
+redis/copy_linux_amd64:
+	cp redis/src/liberedis.so golang/eredis/libs/liberedis_linux_amd64.so
+
+redis/copy: redis/copy_linux_amd64
+	cp redis/src/eredis.h golang/eredis/libs
+
+eredis_test: redis/src/liberedis.so eredis_test.o redis/copy
 	$(CC) eredis_test.o -o eredis_test -Lredis/src -leredis $(EXTRA_LDFLAGS) $(EXTRA_LIBS)
 
 eredis_benchmark: redis/src/liberedis.so eredis_benchmark.o
