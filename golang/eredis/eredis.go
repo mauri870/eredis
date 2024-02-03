@@ -37,7 +37,7 @@ import (
 )
 
 type Client struct {
-	client *_Ctype_struct_eredis_client
+	client *C.eredis_client_t
 }
 
 var initialized bool = false
